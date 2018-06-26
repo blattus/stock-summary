@@ -1,0 +1,33 @@
+<html>
+<head>
+	<title>Stocks - {{ title }}</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+
+	<div class="container">
+		<h3>wooo stocks!</h3>
+		<hr>
+		<table class="table table-striped table-sm">
+			<thead>
+				<tr>
+					<th scope="col">Symbol</th>
+					<th scope="col" class="text-right">Shares</th>
+					<th scope="col" class="text-right">Cost Basis</th>
+					<th scope="col" class="text-right">Market Value</th>
+					<th scope="col" class="text-right">Gain / Loss ($)</th>
+				</tr>
+			</thead>
+			{% for security, data in portfolio|dictsort %}
+			<tr>
+				<th>{{ data['summary']['symbol'] }}</th>
+				<td class="text-right">{{ "%.2f"|format(data['summary']['num_shares']) }}</td>
+				<td class="text-right">{{ "$%.2f"|format(data['summary']['cost_basis']) }}</td>
+				<td class="text-right">{{ "$%.2f"|format(data['summary']['market_value']) }}</td>
+				<td class="text-right {{ 'text-success' if data['summary']['gain_loss'] > 0 }}{{ 'text-danger' if data['summary']['gain_loss'] < 0 }}">{{ "$%.2f"|format(data['summary']['gain_loss']) }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+</body>
+</html>
