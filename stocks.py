@@ -21,7 +21,7 @@ with open('portfolio.csv') as csv_file:
 	next(reader, None)
 
 	for raw_row in reader:
-		row = map(lambda x: x.strip(), raw_row)
+		row = list(map(lambda x: x.strip(), raw_row))
 		security = row[2]
 
 		# if we already have the symbol, add the new order info 
