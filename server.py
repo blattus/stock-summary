@@ -4,7 +4,6 @@ from stocks import portfolio
 app = Flask(__name__)
 global portfolio
 
-
 @app.route('/', methods=['GET'])
 def homepage():
 	if request.method == 'GET':

@@ -5,6 +5,7 @@ Simple API client for the AlphaVantage stock API.
 
 import json
 import requests
+import time
 
 class Alphavantage(object):
 	
@@ -13,6 +14,7 @@ class Alphavantage(object):
 
 		# TODO: perform some validation on the key here
 		self.api_key = key	
+		self.SECONDS_PER_REQUEST = 1 # Alphavantage has a rate limit of 1 call/s on free version
 
 	def intraday(self,symbol,interval):
 		if interval not in [1,5,15,30,60]:
@@ -27,7 +29,7 @@ class Alphavantage(object):
 			'interval' : interval
 		}
 
-		return(self.get_results(params))
+		return(self.get_results_with_retry(params))
 
 	# TODO: is there some way to consolidate with function decorators?
 	def daily(self,symbol):
@@ -35,7 +37,7 @@ class Alphavantage(object):
 			'function' : 'TIME_SERIES_DAILY',
 			'symbol' : symbol
 		}
-		return(self.get_results(params))
+		return(self.get_results_with_retry(params))
 
 	def daily_adjusted(self,symbol):
 		params = {
@@ -43,7 +45,7 @@ class Alphavantage(object):
 			'symbol' : symbol
 		}
 
-		return(self.get_results(params))
+		return(self.get_results_with_retry(params))
 
 	def weekly(self,symbol):
 		params = {
@@ -51,7 +53,7 @@ class Alphavantage(object):
 			'symbol' : symbol
 		}
 
-		return(self.get_results(params))
+		return(self.get_results_with_retry(params))
 
 	def batch_quote(self,symbols):
 		params = {
@@ -64,7 +66,7 @@ class Alphavantage(object):
 		else:
 			params['symbols'] = ','.join(symbols)
 
-		api_results = self.get_results(params)
+		api_results = self.get_results_with_retry(params)
 		batch_quotes = {}
 		
 		for result in api_results['Stock Quotes']:
@@ -91,11 +93,22 @@ class Alphavantage(object):
 			'to_currency' : 'USD'
 		}
 
-		result = self.get_results(params)
-
-		crypto_usd = result['Realtime Currency Exchange Rate']['5. Exchange Rate']
+		result = self.get_results_with_retry(params)
+		if('Realtime Currency Exchange Rate' in result):
+			crypto_usd = result['Realtime Currency Exchange Rate']['5. Exchange Rate']
 
 		return(crypto_usd)
+
+	# get results with retry for Rate Limit Exceeded
+	def get_results_with_retry(self, kwargs):
+		time.sleep(self.SECONDS_PER_REQUEST)
+		results = self.get_results(kwargs)
+		while('Information' in results and '/premium' in results['Information']):
+			print('API Rate Limit Exceeded')
+			time.sleep(SECONDS_PER_REQUEST)
+			results = self.get_results(kwargs)
+		
+		return results
 
 	# get API results
 	def get_results(self,kwargs):
