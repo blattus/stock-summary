@@ -11,7 +11,7 @@ Market data is obtained using the Alpha Vantage API through a a small API client
 
 # Running
 - Obtain an [Alpha Vantage](https://www.alphavantage.co/) API key
-- Add a `config.py` file to the root directory with a single line: `API_KEY = [[ your alpha vantage API key ]]`
+- Add a `config.py` file to the root directory with a single line: `API_KEY = "[[ your alpha vantage API key ]]"`
 
 - Add your ledger to a `portfolio.csv` file with the format `date`,`order_type`,`symbol`,`num_shares`,`share_price`,`commission`
 	- `date` - YYYY-MM-DD as [ISO-8601](https://xkcd.com/1179/) intended

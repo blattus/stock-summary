@@ -6,7 +6,6 @@ except ImportError:
 	print("No config.py file found!")
 	exit(1)
 
-# API_KEY = 'NC4HA06Y77J2ENAA'
 API_KEY = config.API_KEY
 
 api_client = Alphavantage(API_KEY)
@@ -21,7 +20,8 @@ with open('portfolio.csv') as csv_file:
 	# something like this? `headers = f.next().split(',')[1:]` but without the comma splitting
 	next(reader, None)
 
-	for row in reader:
+	for raw_row in reader:
+		row = map(lambda x: x.strip(), raw_row)
 		security = row[2]
 
 		# if we already have the symbol, add the new order info 
