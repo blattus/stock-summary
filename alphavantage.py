@@ -46,8 +46,9 @@ class Alphavantage(object):
 			if 'Time Series' in k:
 				key = k
 		if key:
-			times = results[key].keys()
+			times = list(results[key].keys())
 			times.sort(reverse=True)
+			
 			return float(results[key][times[0]]['4. close'])
 
 	def daily_adjusted(self,symbol):
