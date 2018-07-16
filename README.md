@@ -21,6 +21,7 @@ Market data is obtained using the Alpha Vantage API through a a small API client
 	- `share_price` - price per share
 	- `commission` - commission (if any)
 
+- `source bin/activate` to activate the virtualenv
 - `python server.py`
 - Go to the addres shown in your terminal window to view the summary table
 

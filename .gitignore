@@ -8,6 +8,10 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+bin/
+pip-selfcheck.json
+.vscode/
+include/
 build/
 develop-eggs/
 dist/
