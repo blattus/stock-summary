@@ -37,7 +37,19 @@ class Alphavantage(object):
 			'function' : 'TIME_SERIES_DAILY',
 			'symbol' : symbol
 		}
-		return(self.get_results_with_retry(params))
+		return self.get_results_with_retry(params)
+
+	def get_most_recent_daily_close(self, symbol):
+		results = self.daily(symbol)
+		key = None
+		for k in results.keys():
+			if 'Time Series' in k:
+				key = k
+		if key:
+			times = list(results[key].keys())
+			times.sort(reverse=True)
+			
+			return float(results[key][times[0]]['4. close'])
 
 	def daily_adjusted(self,symbol):
 		params = {
@@ -73,7 +85,7 @@ class Alphavantage(object):
 			symbol = result['1. symbol']
 			batch_quotes[symbol] = {
 				'symbol' : symbol,
-				'price' : result['2. price'],
+				'price' : float(result['2. price']),
 				'volume' : result['3. volume'],
 				'timestamp' : result['4. timestamp']
 			}
@@ -105,7 +117,7 @@ class Alphavantage(object):
 		results = self.get_results(kwargs)
 		while('Information' in results and '/premium' in results['Information']):
 			print('API Rate Limit Exceeded')
-			time.sleep(SECONDS_PER_REQUEST)
+			time.sleep(self.SECONDS_PER_REQUEST)
 			results = self.get_results(kwargs)
 		
 		return results
