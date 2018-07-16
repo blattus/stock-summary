@@ -23,8 +23,16 @@
 				<th>{{ data['summary']['symbol'] }}</th>
 				<td class="text-right">{{ "%.2f"|format(data['summary']['num_shares']) }}</td>
 				<td class="text-right">{{ "$%.2f"|format(data['summary']['cost_basis']) }}</td>
-				<td class="text-right">{{ "$%.2f"|format(data['summary']['market_value']) }}</td>
-				<td class="text-right {{ 'text-success' if data['summary']['gain_loss'] > 0 }}{{ 'text-danger' if data['summary']['gain_loss'] < 0 }}">{{ "$%.2f"|format(data['summary']['gain_loss']) }}</td>
+				<td class="text-right">
+					{% if data['summary']['market_value'] %}
+						{{ "$%.2f"|format(data['summary']['market_value']) }}
+					{% endif %}
+				</td>
+				{% if data['summary']['gain_loss'] %}
+					<td class="text-right {{ 'text-success' if data['summary']['gain_loss'] > 0 }}{{ 'text-danger' if data['summary']['gain_loss'] < 0 }}">{{ "$%.2f"|format(data['summary']['gain_loss']) }}</td>
+				{% else %}
+					<td class="text-right"></td>
+				{% endif %}
 			</tr>
 			{% endfor %}
 		</table>

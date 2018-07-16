@@ -8,7 +8,5 @@ def homepage():
 	portfolio = create_portfolio()
 	return render_template('index.html', portfolio=portfolio, title='Home')
 
-
-
 if __name__ == '__main__':
 	app.run()
